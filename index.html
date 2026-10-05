@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SK Invoice Calculator</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#111827;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.container{
+  width:92%;
+  max-width:500px;
+  background:#1f2937;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+.result{
+  margin-top:20px;
+  padding:18px;
+  background:#111827;
+  border-radius:12px;
+  line-height:1.8;
+}
+
+.total{
+  font-size:24px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧾 SK Invoice Calculator</h1>
+
+<input id="item" type="text" placeholder="Item name">
+
+<input id="price" type="number" placeholder="Price">
+
+<input id="quantity" type="number" placeholder="Quantity">
+
+<input id="tax" type="number" placeholder="Tax %">
+
+<button onclick="calculate()">Calculate Invoice</button>
+
+<div class="result" id="result">
+Enter details and calculate.
+</div>
+
+</div>
+
+<script>
+
+function calculate(){
+
+  let item = document.getElementById("item").value;
+  let price = Number(document.getElementById("price").value);
+  let quantity = Number(document.getElementById("quantity").value);
+  let tax = Number(document.getElementById("tax").value);
+
+  if(!item || price <= 0 || quantity <= 0){
+
+    document.getElementById("result").innerHTML =
+    "⚠️ Please enter valid details.";
+
+    return;
+  }
+
+  let subtotal = price * quantity;
+  let taxAmount = subtotal * tax / 100;
+  let total = subtotal + taxAmount;
+
+  document.getElementById("result").innerHTML =
+
+  "📦 Item: " + item +
+  "<br>💰 Price: ₹" + price.toFixed(2) +
+  "<br>🔢 Quantity: " + quantity +
+  "<br>📊 Subtotal: ₹" + subtotal.toFixed(2) +
+  "<br>🧾 Tax: ₹" + taxAmount.toFixed(2) +
+  "<br><br><span class='total'>Total: ₹" +
+  total.toFixed(2) +
+  "</span>";
+}
+
+</script>
+
+</body>
+</html>
