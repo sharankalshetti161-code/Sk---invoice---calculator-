@@ -16,63 +16,109 @@ body{
   font-family:Arial,sans-serif;
   background:#111827;
   color:white;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  padding:20px;
 }
 
 .container{
-  width:92%;
-  max-width:500px;
+  max-width:600px;
+  margin:auto;
   background:#1f2937;
   padding:25px;
-  border-radius:20px;
+  border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
 h1{
   text-align:center;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#9ca3af;
   margin-bottom:25px;
+}
+
+label{
+  display:block;
+  margin-top:15px;
+  margin-bottom:6px;
 }
 
 input{
   width:100%;
-  padding:14px;
-  margin:8px 0;
+  padding:13px;
   border:none;
   border-radius:10px;
+  background:#374151;
+  color:white;
   font-size:16px;
+  outline:none;
 }
 
 button{
   width:100%;
   padding:14px;
-  margin-top:12px;
+  margin-top:15px;
   border:none;
   border-radius:10px;
-  background:#2563eb;
-  color:white;
-  font-size:17px;
+  font-size:16px;
   font-weight:bold;
   cursor:pointer;
 }
 
-button:hover{
-  background:#1d4ed8;
+.calculate{
+  background:#22c55e;
+  color:white;
 }
 
-.result{
-  margin-top:20px;
-  padding:18px;
+.print{
+  background:#3b82f6;
+  color:white;
+}
+
+.download{
+  background:#8b5cf6;
+  color:white;
+}
+
+.clear{
+  background:#ef4444;
+  color:white;
+}
+
+.invoice{
+  margin-top:25px;
+  padding:20px;
   background:#111827;
   border-radius:12px;
-  line-height:1.8;
+}
+
+.invoice h2{
+  text-align:center;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #374151;
 }
 
 .total{
-  font-size:24px;
+  font-size:22px;
   font-weight:bold;
+  margin-top:10px;
+}
+
+@media(max-width:500px){
+  body{
+    padding:10px;
+  }
+
+  .container{
+    padding:18px;
+  }
 }
 </style>
 </head>
@@ -82,54 +128,212 @@ button:hover{
 <div class="container">
 
 <h1>🧾 SK Invoice Calculator</h1>
+<p class="subtitle">Simple Invoice Generator</p>
 
-<input id="item" type="text" placeholder="Item name">
+<label>Item Name</label>
+<input type="text" id="item" placeholder="Example: T-Shirt">
 
-<input id="price" type="number" placeholder="Price">
+<label>Price (₹)</label>
+<input type="number" id="price" placeholder="500">
 
-<input id="quantity" type="number" placeholder="Quantity">
+<label>Quantity</label>
+<input type="number" id="quantity" placeholder="1" value="1">
 
-<input id="tax" type="number" placeholder="Tax %">
+<label>GST (%)</label>
+<input type="number" id="gst" placeholder="18" value="18">
 
-<button onclick="calculate()">Calculate Invoice</button>
+<button class="calculate" onclick="calculateInvoice()">
+Calculate Invoice
+</button>
 
-<div class="result" id="result">
-Enter details and calculate.
+<button class="print" onclick="printInvoice()">
+🖨️ Print Invoice
+</button>
+
+<button class="download" onclick="downloadInvoice()">
+⬇️ Download Invoice
+</button>
+
+<button class="clear" onclick="clearInvoice()">
+🧹 Clear
+</button>
+
+<div class="invoice" id="invoice">
+
+<h2>SK INVOICE</h2>
+
+<div class="row">
+<span>Item</span>
+<span id="showItem">-</span>
+</div>
+
+<div class="row">
+<span>Price</span>
+<span>₹<span id="showPrice">0.00</span></span>
+</div>
+
+<div class="row">
+<span>Quantity</span>
+<span id="showQuantity">0</span>
+</div>
+
+<div class="row">
+<span>Subtotal</span>
+<span>₹<span id="subtotal">0.00</span></span>
+</div>
+
+<div class="row">
+<span>GST</span>
+<span>₹<span id="gstAmount">0.00</span></span>
+</div>
+
+<div class="row total">
+<span>Total</span>
+<span>₹<span id="total">0.00</span></span>
+</div>
+
 </div>
 
 </div>
 
 <script>
 
-function calculate(){
+function calculateInvoice(){
 
   let item = document.getElementById("item").value;
   let price = Number(document.getElementById("price").value);
   let quantity = Number(document.getElementById("quantity").value);
-  let tax = Number(document.getElementById("tax").value);
+  let gst = Number(document.getElementById("gst").value);
 
   if(!item || price <= 0 || quantity <= 0){
-
-    document.getElementById("result").innerHTML =
-    "⚠️ Please enter valid details.";
-
+    alert("Please enter valid item, price and quantity.");
     return;
   }
 
   let subtotal = price * quantity;
-  let taxAmount = subtotal * tax / 100;
-  let total = subtotal + taxAmount;
+  let gstAmount = subtotal * gst / 100;
+  let total = subtotal + gstAmount;
 
-  document.getElementById("result").innerHTML =
+  document.getElementById("showItem").innerText = item;
+  document.getElementById("showPrice").innerText = price.toFixed(2);
+  document.getElementById("showQuantity").innerText = quantity;
+  document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+  document.getElementById("gstAmount").innerText = gstAmount.toFixed(2);
+  document.getElementById("total").innerText = total.toFixed(2);
+}
 
-  "📦 Item: " + item +
-  "<br>💰 Price: ₹" + price.toFixed(2) +
-  "<br>🔢 Quantity: " + quantity +
-  "<br>📊 Subtotal: ₹" + subtotal.toFixed(2) +
-  "<br>🧾 Tax: ₹" + taxAmount.toFixed(2) +
-  "<br><br><span class='total'>Total: ₹" +
-  total.toFixed(2) +
-  "</span>";
+
+function printInvoice(){
+
+  calculateInvoice();
+
+  let invoice = document.getElementById("invoice").innerHTML;
+
+  let newWindow = window.open("", "", "width=600,height=700");
+
+  newWindow.document.write(`
+  <html>
+  <head>
+  <title>SK Invoice</title>
+
+  <style>
+  body{
+    font-family:Arial;
+    padding:30px;
+  }
+
+  h2{
+    text-align:center;
+  }
+
+  .row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px;
+    border-bottom:1px solid #ddd;
+  }
+
+  .total{
+    font-size:22px;
+    font-weight:bold;
+  }
+  </style>
+
+  </head>
+
+  <body>
+  ${invoice}
+  </body>
+
+  </html>
+  `);
+
+  newWindow.document.close();
+  newWindow.print();
+}
+
+
+function downloadInvoice(){
+
+  calculateInvoice();
+
+  let item = document.getElementById("showItem").innerText;
+  let price = document.getElementById("showPrice").innerText;
+  let quantity = document.getElementById("showQuantity").innerText;
+  let subtotal = document.getElementById("subtotal").innerText;
+  let gst = document.getElementById("gstAmount").innerText;
+  let total = document.getElementById("total").innerText;
+
+  let text = `
+SK INVOICE
+====================
+
+Item: ${item}
+
+Price: ₹${price}
+
+Quantity: ${quantity}
+
+Subtotal: ₹${subtotal}
+
+GST: ₹${gst}
+
+TOTAL: ₹${total}
+
+====================
+Generated by SK Invoice Calculator
+`;
+
+  let blob = new Blob([text], {
+    type:"text/plain"
+  });
+
+  let url = URL.createObjectURL(blob);
+
+  let a = document.createElement("a");
+
+  a.href = url;
+  a.download = "SK-Invoice.txt";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+
+function clearInvoice(){
+
+  document.getElementById("item").value = "";
+  document.getElementById("price").value = "";
+  document.getElementById("quantity").value = "1";
+  document.getElementById("gst").value = "18";
+
+  document.getElementById("showItem").innerText = "-";
+  document.getElementById("showPrice").innerText = "0.00";
+  document.getElementById("showQuantity").innerText = "0";
+  document.getElementById("subtotal").innerText = "0.00";
+  document.getElementById("gstAmount").innerText = "0.00";
+  document.getElementById("total").innerText = "0.00";
 }
 
 </script>
